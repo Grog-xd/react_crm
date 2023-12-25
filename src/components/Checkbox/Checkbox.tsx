@@ -3,13 +3,14 @@ import classes from './Checkbox.module.css'
 
 
 interface ICheckbox{
-    func?: () => void
-    canBeDeleted: number[]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onChange: (e:boolean) => any 
+    checked: boolean
 }
 
-const Checkbox:FC<ICheckbox> = () =>{
+const Checkbox:FC<ICheckbox> = ({onChange, checked}) =>{
    return(
-      <input className={classes.checkbox} type='checkbox' onChange={(e) => console.log(e.target.value)} checked={false}/>
+      <input className={classes.checkbox} type='checkbox' onChange={(e) => onChange(e.target.checked)} checked={checked}/>
    )
 }
 export default Checkbox

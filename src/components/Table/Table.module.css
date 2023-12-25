@@ -9,17 +9,20 @@
 	font-size: 15px;
 	background: #fff!important;
   color: black;
+  height:fit-content
 }
-
+.table tr{
+	height:50px;
+}
 .table th {
 	font-weight: bold;
 	padding: 7px;
 	background: #ffd300;
 	border: none;
-	text-align: left;
 	font-size: 15px;
 	border-top: 3px solid #fff;
 	border-bottom: 3px solid #ffd300;
+	transition:.5s all ease
 }
 
 .table td {
@@ -28,8 +31,16 @@
 	border-top: 3px solid #fff;
 	border-bottom: 3px solid #fff;
 	font-size: 15px;
+	transition:.5s all ease;
+	cursor:pointer;
 }
 
+
+.tableLayout{
+	max-height:100vh;
+	overflow:auto;
+	width:100%;
+}
 .table tbody tr:nth-child(even){
 	background: #f8f8f8!important;
 }

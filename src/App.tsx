@@ -1,51 +1,54 @@
 import "./App.css";
-import Checkbox from "./components/Checkbox/Checkbox";
+import Table from "./components/Table/Table";
+import TableHeader from "./components/TableHeader/TableHeader";
 import { useAppDispatch, useAppSelector } from "./hooks/redux";
+import { createId } from "./hooks/createId";
 import { companySlice } from "./store/reducers/CompanySlice";
+import CompanyTableBody from "./components/CompanyTableBody/CompanyTableBody";
+import { employeeSlice } from "./store/reducers/EmployeeSlice";
+import EmployeeTableBody from "./components/EmployeeTableBody/EmployeeTableBody";
 import { useEffect } from "react";
 
 function App() {
-  const {companies, canBeDeleted} = useAppSelector(state => state.companyReducer)
-  const {checkboxHandler} = companySlice.actions
+  const {employeeCanBeDeleted} = useAppSelector(state => state.employeeReducer)
+  const {companiesCanBeDeleted, activeCompanyId} = useAppSelector(state => state.companyReducer)
+  const {deleteCompanies, addCompany, changeActiveCompanyId, multiCompanyCheckboxHandler} = companySlice.actions
+  const {deleteEmploees, addEmployee, changeActiveEmployeeId, multiEmployeeCheckboxHandler, clearCanBeDeletedArray} = employeeSlice.actions
   const dispatch = useAppDispatch()
+  
 
   useEffect(() =>{
-    dispatch(checkboxHandler(1))
-    dispatch(checkboxHandler(2))
-    dispatch(checkboxHandler(3))
-    dispatch(checkboxHandler(1))
-  }, [])
-  // функционал чекбокса пока не работтает (не убирает выделенные)
-  console.log(canBeDeleted);
+    dispatch(clearCanBeDeletedArray())
+  }, [activeCompanyId])
+
+  function addNewCompany(){
+    const companyId = createId()
+    dispatch(addCompany({name:'', address:'',id:companyId}))
+    dispatch(changeActiveCompanyId(companyId))
+  }
+  function deleteCompany(){
+    dispatch(deleteCompanies())
+  }
+  function addNewEmployee(){
+    const employeeId = createId()
+    dispatch(addEmployee({name:'', surname:'', position:'',id:employeeId, companyId: activeCompanyId}))
+    dispatch(changeActiveEmployeeId(employeeId))
+  }
+  function deleteEmployee(){
+    dispatch(deleteEmploees())
+  }
+
   return (
-    <>
-    <Checkbox />
-     <table className="table" >
-      <thead>
-        <tr>
-          <th onClick={() => dispatch(checkboxHandler(1))}>test</th>
-          <th>test</th>
-          <th>test</th>
-          <th>test</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>test</td>
-          <td>test</td>
-          <td>test</td>
-          <td>test</td>
-        </tr>
-        <tr>
-          <td>test</td>
-          <td>test</td>
-          <td>test</td>
-          <td>test</td>
-        </tr>
-      </tbody>
-      
-     </table>
-    </>
+    <div className='app'>
+      <Table>
+        <TableHeader multiCheckboxHandler={(e)=>dispatch(multiCompanyCheckboxHandler(e))} canBeDeleted={companiesCanBeDeleted} columns={['Название', 'Кол-во сотрудников', 'Адрес']} addFunc={addNewCompany} deleteFunc={deleteCompany}/>
+        <CompanyTableBody/>
+      </Table>
+      <Table>
+        <TableHeader multiCheckboxHandler={(e) => dispatch(multiEmployeeCheckboxHandler({companyId:activeCompanyId, status:e}))} canBeDeleted={employeeCanBeDeleted} columns={['Имя', 'Фамилия', 'Должность']} addFunc={addNewEmployee} deleteFunc={deleteEmployee}/>
+        <EmployeeTableBody/>
+      </Table>
+    </div>
   );
 }
 

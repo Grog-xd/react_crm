@@ -7,9 +7,11 @@ interface ITable {
 
 const Table:FC<ITable> = ({children}) =>{
    return(
+      <div className={classes.tableLayout} >
       <table className={classes.table}>
         {children}
       </table>
+      </div>
    )
 }
 export default Table
